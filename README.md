@@ -25,3 +25,6 @@ Buddy is written in TypeScript because it gives static types and fast editor fee
 This screenshot shows Buddy running in the terminal:
 
 ![Buddy terminal example](asset/ex.png)
+
+Currently I am building OS which I eventually connect this software with it - check out my OS repo:
+    -`https://github.com/TamimDostyar/operating-system`
