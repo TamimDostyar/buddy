@@ -26,5 +26,4 @@ This screenshot shows Buddy running in the terminal:
 
 ![Buddy terminal example](asset/ex.png)
 
-Currently I am building OS which I eventually connect this software with it - check out my OS repo:
-    -`https://github.com/TamimDostyar/operating-system`
+I am currently building an OS that I eventually plan to connect with this software. Check out my [OS repository here](https://github.com/TamimDostyar/operating-system).
