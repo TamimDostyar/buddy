@@ -14,3 +14,9 @@ Small CLI-oriented helper for everyday tasks. Keep it simple: you talk to Buddy 
 - `skills/` — one folder per skill; each skill has a short `.md` describing what it will do.
 - `ui/` — plans for terminal vs any future interface.
 - `security/` — notes on system security and threading/concurrency expectations.
+
+## Example
+
+This screenshot shows Buddy running in the terminal:
+
+![Buddy terminal example](asset/ex.png)
