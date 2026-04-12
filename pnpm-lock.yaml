@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@just4/ua-info':
+        specifier: ^4.0.0
+        version: 4.0.0
+      get-port-please:
+        specifier: ^3.2.0
+        version: 3.2.0
       ollama:
         specifier: ^0.6.3
         version: 0.6.3
@@ -177,6 +183,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@just4/ua-info@4.0.0':
+    resolution: {integrity: sha512-CAJA6DxeS+RImnf4vDVzruUiXUBDMn41SkFiEA38eM7hjN1ynhD1SGt4VRZ2GS4x8S0q94Yvfeov6HvHG7NN0w==}
+
   esbuild@0.27.7:
     resolution: {integrity: sha512-IxpibTjyVnmrIQo5aqNpCgoACA/dTKLTlhMHihVHhdkxKyPO1uBBthumT0rdHmcsk9uMonIWS0m4FljWzILh3w==}
     engines: {node: '>=18'}
@@ -186,6 +195,9 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  get-port-please@3.2.0:
+    resolution: {integrity: sha512-I9QVvBw5U/hw3RmWpYKRumUeaDgxTPd401x364rLmWBJcOQ753eov1eTgzDqRG9bqFIfDc7gfzcQEWrUri3o1A==}
 
   get-tsconfig@4.13.7:
     resolution: {integrity: sha512-7tN6rFgBlMgpBML5j8typ92BKFi2sFQvIdpAqLA2beia5avZDrMs0FLZiM5etShWq5irVyGcGMEA1jcDaK7A/Q==}
@@ -289,6 +301,8 @@ snapshots:
   '@esbuild/win32-x64@0.27.7':
     optional: true
 
+  '@just4/ua-info@4.0.0': {}
+
   esbuild@0.27.7:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.27.7
@@ -320,6 +334,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  get-port-please@3.2.0: {}
 
   get-tsconfig@4.13.7:
     dependencies:

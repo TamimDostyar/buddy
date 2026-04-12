@@ -16,6 +16,8 @@
     "typescript": "^6.0.2"
   },
   "dependencies": {
+    "@just4/ua-info": "^4.0.0",
+    "get-port-please": "^3.2.0",
     "ollama": "^0.6.3"
   }
 }

@@ -3,9 +3,10 @@
 enum System {
     // default Macos
     SystemName = "MacOS",
-    PLAYWRIGHT = "PLAYWRIGHT"
+    PLAYWRIGHT = "PLAYWRIGHT",
+    DEFAULT_PORT = 3000
 }
 
 const MODEL: string = "granite4:3b";
 
-export {MODEL}
+export {MODEL, System}

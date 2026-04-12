@@ -1,20 +1,26 @@
+import { System } from "../config/config.js";
+import { getPort, checkPort } from "get-port-please";
 
-class PortSystem extends Error {
-    port: number;
-    details?;
 
-    constructor(port: number, details?: string) {
-        super(`Port ${port} is already in use.`);
-        this.port = port;
-        this.details = details;
+async function main() {
+    const portToCheck = System.DEFAULT_PORT;
+
+    const isAvailable = await checkPort(portToCheck);
+
+    if (typeof portToCheck !== "number") {
+        console.log("Port must be number.");
     }
+
+    if (isAvailable) {
+        console.log(`Port ${portToCheck} is available.`);
+    } else {
+        console.log(`Port ${portToCheck} is NOT available.`);
+    }
+
+    const port = await getPort(portToCheck);
+    console.log(`Using port: ${port}`);
 }
 
-
-// function isError(err: unknown): err is NodeJS.ErrnoException {
-//     return (
-//         typeof err === "object" &&
-//         err !== null &&
-//         "code" in err
-//     );
-// }
+main().catch((err) => {
+    console.error("Error in port check:", err);
+});
