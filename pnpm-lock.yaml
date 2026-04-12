@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@just4/ua-info':
-        specifier: ^4.0.0
-        version: 4.0.0
       get-port-please:
         specifier: ^3.2.0
         version: 3.2.0
@@ -183,9 +180,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@just4/ua-info@4.0.0':
-    resolution: {integrity: sha512-CAJA6DxeS+RImnf4vDVzruUiXUBDMn41SkFiEA38eM7hjN1ynhD1SGt4VRZ2GS4x8S0q94Yvfeov6HvHG7NN0w==}
-
   esbuild@0.27.7:
     resolution: {integrity: sha512-IxpibTjyVnmrIQo5aqNpCgoACA/dTKLTlhMHihVHhdkxKyPO1uBBthumT0rdHmcsk9uMonIWS0m4FljWzILh3w==}
     engines: {node: '>=18'}
@@ -300,8 +294,6 @@ snapshots:
 
   '@esbuild/win32-x64@0.27.7':
     optional: true
-
-  '@just4/ua-info@4.0.0': {}
 
   esbuild@0.27.7:
     optionalDependencies:
