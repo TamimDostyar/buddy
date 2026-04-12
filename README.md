@@ -8,6 +8,8 @@ Small CLI-oriented helper for everyday tasks. Keep it simple: you talk to Buddy 
 
 ## Repo layout (high level)
 
+- `pnpm tsx src/cli/cli.ts `
+
 - `src/` — core code: CLI, config, memory, system service.
 - `skills/` — one folder per skill; each skill has a short `.md` describing what it will do.
 - `ui/` — plans for terminal vs any future interface.
