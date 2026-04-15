@@ -1,6 +1,14 @@
 import { SystemAIService } from "../system/systemService.js";
 import { System } from "../config/config.js";
 import * as readline from "readline";
+import * as path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+import { MemoryManagement } from "../memory/mem.js";
+import { existsSync } from "fs";
+import { start } from "repl";
+const MEMORY_DIR = path.resolve(__dirname, "../../.memoryChatSession");
 
 
 class SystemCLI {
@@ -49,6 +57,16 @@ export class SystemRunner {
         messageAsInput.on('close', () => {
             console.log("Exiting...");
         });
+    }
+
+    readFile(){
+        let memoryManagementSystem = new MemoryManagement();
+        let startMemory = memoryManagementSystem.initMemory();
+        let fullPath: string = MEMORY_DIR + "/" + startMemory;
+
+        if (!existsSync(fullPath)){
+            console.log("there was a problem\n");
+        }
     }
 }
 

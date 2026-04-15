@@ -17,8 +17,8 @@ let sessionID: number = systemRunner.generateSessionNumber();
 const memoryFile = `${sessionID}.json`;
 const filePath = path.join(MEMORY_DIR, memoryFile);
 
-class MemoryManagement {
-    initMemory() {
+export class MemoryManagement {
+    initMemory(): string {
         if (!fs.existsSync(MEMORY_DIR)) {
             fs.mkdirSync(MEMORY_DIR, { recursive: true });
         }
@@ -26,16 +26,20 @@ class MemoryManagement {
         if (!fs.existsSync(filePath)) {
             console.log("Memory file does not exist. Creating a new one...");
             fs.writeFileSync(filePath, "test", "utf-8");
+            return filePath;
         } else {
             try {
                 const content = fs.readFileSync(filePath, "utf-8");
                 if (content === "") {
                     console.log("Memory file exists but is empty.");
+                    return filePath;
                 } else {
                     console.log("Memory file exists and contains data.");
+                    return filePath;
                 }
             } catch (error) {
                 console.error("Error reading the memory file:", error);
+                return "There was an error reading the memory";
             }
         }
         
