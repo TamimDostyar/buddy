@@ -2,6 +2,7 @@ import { SystemAIService } from "../system/systemService.js";
 import { System } from "../config/config.js";
 import * as readline from "readline";
 
+
 class SystemCLI {
     async systemRunner(msg: string): Promise<void> {
         const systemService = new SystemAIService();
@@ -10,7 +11,12 @@ class SystemCLI {
     }
 }
 
-class SystemRunner {
+export class SystemRunner {
+    // every time we run system runner we first create the session number for it
+    generateSessionNumber(): number{
+        let randomInt = Math.floor(Math.random() * (9000 + 1))
+        return randomInt;
+    }
     runner() {
         const deviceName = System.SystemName;
         const deviceDesc = System.SystemDesc;
@@ -31,7 +37,7 @@ class SystemRunner {
                 return;
             }
             console.log("--")
-            console.log("Thinking..... 😂")
+            console.log("Generating.....")
             console.log("--")
 
             const cli = new SystemCLI();
@@ -47,4 +53,5 @@ class SystemRunner {
 }
 
 const system = new SystemRunner();
-system.runner();
+// system.runner();
+// console.log(system.generateSessionNumber());
