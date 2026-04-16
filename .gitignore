@@ -2,3 +2,4 @@ plan.md
 temp/temp.json
 node_modules
 .memoryChatSession
+.pnpm-store

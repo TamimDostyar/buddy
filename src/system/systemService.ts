@@ -6,29 +6,43 @@ import { MODEL } from "../config/config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+export type Message = {
+  role: "user" | "assistant" | "system";
+  content: string;
+};
+
 class SystemAIService {
-    async readMarkdownFile(filePath: string): Promise<string> {
-        const fullPath = path.resolve(__dirname, filePath);
-        const content = await readFile(fullPath, "utf-8");
-        return content;
-    }
+  private ollama = new Ollama();
 
-    async ollamaIntelligence(userPrompt: string): Promise<string> {
-        const mdContent = await this.readMarkdownFile("../../skills/init.md");
+  async readMarkdownFile(filePath: string): Promise<string> {
+    const fullPath = path.resolve(__dirname, filePath);
+    return await readFile(fullPath, "utf-8");
+  }
 
-        const ollama = new Ollama();
-        const response = await ollama.generate({
-            model: MODEL,
-            system: mdContent,
-            prompt: userPrompt,
-        });
+  async ollamaIntelligence(
+    userPrompt: string,
+    priorMessages: Message[] = []
+  ): Promise<string> {
+    const systemPrompt = await this.readMarkdownFile(
+      "../../skills/init.md"
+    );
+    const messages: Message[] = [
+      { role: "system", content: systemPrompt },
+      ...priorMessages,
+      { role: "user", content: userPrompt }
+    ];
 
-        return response.response;
-    }
+    const response = await this.ollama.chat({
+      model: MODEL,
+      messages
+    });
 
-    systemService() {
-        console.log("System service");
-    }
+    return response.message.content;
+  }
+
+  systemService() {
+    console.log("System service");
+  }
 }
 
 export { SystemAIService };
