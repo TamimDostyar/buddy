@@ -15,26 +15,32 @@ const memoryManagement = new MemoryManagement();
 class SystemCLI {
     async systemRunner(msg: string, history: any[]): Promise<string> {
         const systemService = new SystemAIService();
-        
-        const chat = await systemService.ollamaIntelligence(msg, history);
+
+        // Map history from {user, output} to {role, content}
+        const formattedHistory = history.flatMap(entry => [
+            { role: "user" as const, content: entry.user },
+            { role: "assistant" as const, content: entry.output }
+        ]);
+
+        const chat = await systemService.ollamaIntelligence(msg, formattedHistory);
         console.log(chat);
         return chat;
     }
 }
 
 export class SystemRunner {
-    generateSessionNumber(): number{
+    generateSessionNumber(): number {
         let randomInt = Math.floor(Math.random() * (9000 + 1))
         return randomInt;
     }
 
-    createFile(sessionID: number): string{
+    createFile(sessionID: number): string {
         const memoryFile = `${sessionID}.json`;
         const filePath = path.join(MEMORY_DIR, memoryFile);
 
         const initMemoryForSystem = memoryManagement.initMemory(filePath);
 
-        if (initMemoryForSystem != null){
+        if (initMemoryForSystem != null) {
             return filePath;
         }
         return "Something went wrong";
@@ -45,19 +51,19 @@ export class SystemRunner {
         const deviceDesc = System.SystemDesc;
         console.log("This program has been initiated and is using: ", deviceName);
         console.log(deviceDesc);
-    
+
         const sessionNumbr: number = this.generateSessionNumber();
         const fileSession: string = this.createFile(sessionNumbr);
         console.log("Session initiated, have fun");
-    
+
         const messageAsInput = readline.createInterface({
             input: process.stdin,
             output: process.stdout,
             prompt: '> '
         });
-    
+
         messageAsInput.prompt();
-    
+
         messageAsInput.on('line', async (input: string) => {
             if (input.trim() === ':q') {
                 messageAsInput.close();
@@ -71,12 +77,12 @@ export class SystemRunner {
             const cli = new SystemCLI();
             const aiReply = await cli.systemRunner(input, history);
             console.log("");
-    
+
             await memoryManagement.writeFile(fileSession, input, aiReply);
 
             messageAsInput.prompt();
         });
-    
+
         messageAsInput.on('close', () => {
             console.log("Exiting...");
         });
