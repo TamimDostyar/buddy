@@ -26,4 +26,7 @@ This screenshot shows Buddy running in the terminal:
 
 ![Buddy terminal example](asset/ex.png)
 
+Here is the working session feature for the system.
+![SESSION](asset/buddySession.png)
+
 I am currently building an OS that I eventually plan to connect with this software. Check out my [OS repository here](https://github.com/TamimDostyar/operating-system).
