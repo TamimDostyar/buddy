@@ -30,3 +30,16 @@ Here is the working session feature for the system.
 ![SESSION](asset/buddySession.png)
 
 I am currently building an OS that I eventually plan to connect with this software. Check out my [OS repository here](https://github.com/TamimDostyar/operating-system).
+
+## Goals
+
+- Replace Ollama with buddyGPT as the AI backend — no external runtime, no cloud dependency, no model that someone else owns
+- Migrate from a TypeScript/Node.js CLI running on macOS to a native process running inside buddyOS
+- Evolve into BuddyShell — the AI-native shell where typing a command and talking to the AI are the same action
+- Use the `.memoryChatSession/` history as training data so the model learns each user's habits over time
+- Eventually have no separation between "terminal" and "AI assistant" — one prompt, one interface, one language
+
+
+
+## OS REPOSITORY - [buddyOS](https://github.com/TamimDostyar/buddyOS)
+## GPT REPOSITORY - [buddyGPT](https://github.com/TamimDostyar/buddyGPT)
