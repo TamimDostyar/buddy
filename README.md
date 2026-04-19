@@ -39,6 +39,42 @@ I am currently building an OS that I eventually plan to connect with this softwa
 - Use the `.memoryChatSession/` history as training data so the model learns each user's habits over time
 - Eventually have no separation between "terminal" and "AI assistant" — one prompt, one interface, one language
 
+---
+
+## Architecture
+
+How input travels through buddyCLI today, and how it will travel through BuddyShell.
+
+```
+  TODAY                                   FUTURE (BuddyShell inside buddyOS)
+  ─────────────────────────────────       ────────────────────────────────────────
+
+  $ pnpm tsx src/cli/cli.ts               buddy> _
+  buddy> what time is it                  buddy> open the file I was editing
+                                                 about the networking bug
+      │                                       │
+      ▼                                       │  sys_ask()  (natural-language syscall)
+  cli.ts                                      ▼
+      │                               buddyGPT  (kai/ kernel subsystem)
+      │                                       │
+      ▼                                       │  reads live kernel state:
+  systemService                               │  · semantic FS index
+  .ollamaIntelligence()                       │  · process table
+      │                                       │  · recent file access log
+      │  HTTP  →  Ollama                      │
+      ▼                                       ▼ decides:
+  downloaded model                    ┌───────────────────────┐
+  responds                            │  command?             │──► exec syscall
+                                      │  natural language?    │──► text answer at buddy>
+      │                               │  need the internet?   │──► fetch online, run it
+      ▼                               └───────────────────────┘
+  console.log(chat)
+  shown in terminal                   shown at  buddy>  with full kernel context
+
+
+  Session saved to:  .memoryChatSession/   ←── becomes training data for buddyGPT
+```
+
 
 
 ## OS REPOSITORY - [buddyOS](https://github.com/TamimDostyar/buddyOS)
