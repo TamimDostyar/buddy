@@ -76,6 +76,6 @@ How input travels through buddyCLI today, and how it will travel through BuddySh
 ```
 
 
-
-## OS REPOSITORY - [buddyOS](https://github.com/TamimDostyar/buddyOS)
-## GPT REPOSITORY - [buddyGPT](https://github.com/TamimDostyar/buddyGPT)
+## REPOSITORIES:
+- [buddyOS](https://github.com/TamimDostyar/buddyOS)
+- [buddyGPT](https://github.com/TamimDostyar/buddyGPT)
