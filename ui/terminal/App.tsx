@@ -123,7 +123,7 @@ export const App: React.FC<Props> = ({ profileName }) => {
 
     return (
         <Box flexDirection="column" width={bodyWidth}>
-            <Header />
+            <Header width={bodyWidth} />
             <StatusBar
                 sessionID={sessionID}
                 profileName={profileName}
@@ -191,14 +191,17 @@ export const App: React.FC<Props> = ({ profileName }) => {
     );
 };
 
-const Header: React.FC = () => (
-    <Box flexDirection="column">
-        <Gradient name="pastel">
-            <BigText text="buddy" font="tiny" />
-        </Gradient>
-        <Text color={"gray"}>
-            BuddyCLI - First AI integrated OS
-        </Text>
+const Header: React.FC<{ width: number }> = ({ width }) => (
+    <Box flexDirection="column" width={width}>
+        <Box flexDirection="row" justifyContent="center" width={width}>
+            <Gradient name="pastel">
+       
+                <BigText text="buddy" font="block" />
+            </Gradient>
+        </Box>
+        <Box flexDirection="row" justifyContent="center" width={width}>
+            <Text color="gray" dimColor>── BuddyCLI · First AI Integrated OS ──</Text>
+        </Box>
     </Box>
 );
 
@@ -227,11 +230,11 @@ const WelcomeHint: React.FC<{ profileName?: string | undefined }> = ({
 }) => (
     <Box flexDirection="column">
         <Text>
-            <Text color="cyan">hey{profileName ? ` ${profileName}` : ""}</Text>
+            <Text color="cyan">Hey{profileName ? ` ${profileName}` : ""}</Text>
             <Text color="gray">, ready when you are.</Text>
         </Text>
         <Text color="gray" dimColor>
-            type a message below and hit enter.
+            Type a message below and hit enter!
         </Text>
     </Box>
 );

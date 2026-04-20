@@ -1,3 +1,4 @@
+#!/usr/bin/env tsx
 import React, { useState } from "react";
 import { render } from "ink";
 import * as fs from "fs";
