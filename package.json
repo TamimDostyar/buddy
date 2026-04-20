@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "get-port-please": "^3.2.0",
-    "ollama": "^0.6.3"
+    "ollama": "^0.6.3",
+    "yaml": "^2.8.3"
   }
 }

@@ -1,0 +1,28 @@
+userProfile:
+  type: text
+  label: "Your name?"
+  help: "Provide your name, please."
+
+userRole:
+  type: select
+  label: "Your role?"
+  help: "Select the option that best describes your current role."
+  options:
+    - Developer
+    - Data Scientist
+    - System Administrator
+    - Designer
+    - Student
+    - Other
+
+userAIchoice:
+  type: select
+  label: "Which ai model are you interested in using?"
+  options:
+    - Ollama (Free)
+    - BuddyLLM (Free)
+  
+useraltChoice:
+  type: text
+  label: "Anything else you want our AI to remember about you?"
+  help: "You can leave your response here:"

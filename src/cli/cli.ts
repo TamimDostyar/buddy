@@ -1,7 +1,8 @@
-import { SystemAIService } from "../system/systemService.js";
+import { SystemAIService, UserProfile } from "../system/systemService.js";
 import { System } from "../config/config.js";
 import * as readline from "readline";
 import * as path from "path";
+import * as fs from "fs";
 import { MemoryManagement } from "../memory/mem.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -44,6 +45,54 @@ export class SystemRunner {
             return filePath;
         }
         return "Something went wrong";
+    }
+
+    async preQuery(): Promise<void> {
+        const file_path = path.resolve(__dirname, "../../profile/profile.json");
+        const queryProfile = new UserProfile();
+        const schema = await queryProfile.createProfile();
+
+        if (typeof schema === "string") {
+            console.error("Error loading profile schema:", schema);
+            return;
+        }
+
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+
+        const ask = (question: string): Promise<string> =>
+            new Promise(resolve => rl.question(question, resolve));
+
+        const answers: Record<string, string> = {};
+        const fields = ["userProfile", "userRole", "userAIchoice", "useraltChoice"] as const;
+
+        for (const key of fields) {
+            const field = (schema as any)[key];
+            if (!field) continue;
+
+            let prompt = `\n${field.label}`;
+            if (field.help) prompt += `\n  ${field.help}`;
+
+            if (field.type === "select" && Array.isArray(field.options)) {
+                field.options.forEach((opt: string, i: number) => {
+                    prompt += `\n  ${i + 1}. ${opt}`;
+                });
+                prompt += "\nEnter number: ";
+                const raw = await ask(prompt);
+                const idx = parseInt(raw.trim(), 10) - 1;
+                answers[key] = field.options[idx] ?? raw.trim();
+            } else {
+                prompt += "\n> ";
+                answers[key] = (await ask(prompt)).trim();
+            }
+        }
+
+        rl.close();
+        fs.mkdirSync(path.dirname(file_path), { recursive: true });
+        fs.writeFileSync(file_path, JSON.stringify(answers, null, 2));
+        console.log("\nProfile saved! Starting buddy...\n");
     }
 
     runner() {
@@ -90,5 +139,19 @@ export class SystemRunner {
 }
 
 const system = new SystemRunner();
-system.runner();
-console.log(system.generateSessionNumber());
+
+async function main() {
+    const profilePath = path.resolve(__dirname, "../../profile/profile.json");
+    const profileContent = fs.existsSync(profilePath)
+        ? fs.readFileSync(profilePath, "utf-8")
+        : "";
+
+    if (!profileContent || profileContent.trim().length === 0) {
+        console.log("Welcome! Let's set up your profile first.");
+        await system.preQuery();
+    }
+
+    system.runner();
+}
+
+main();
