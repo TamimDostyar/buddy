@@ -21,8 +21,19 @@ userAIchoice:
   options:
     - Ollama (Free)
     - BuddyLLM (Free)
-  
+
+userPrimaryLanguage:
+  type: select
+  label: "What language do you want to chat with AI?"
+  options:
+    - English
+    - Spanish
+    - French
+
+
 useraltChoice:
   type: text
   label: "Anything else you want our AI to remember about you?"
   help: "You can leave your response here:"
+
+

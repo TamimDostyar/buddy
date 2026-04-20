@@ -67,7 +67,7 @@ export class SystemRunner {
             new Promise(resolve => rl.question(question, resolve));
 
         const answers: Record<string, string> = {};
-        const fields = ["userProfile", "userRole", "userAIchoice", "useraltChoice"] as const;
+        const fields = ["userProfile", "userRole", "userAIchoice", "userPrimaryLanguage", "useraltChoice"] as const;
 
         for (const key of fields) {
             const field = (schema as any)[key];

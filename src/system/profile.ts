@@ -1,14 +1,18 @@
 import path from "node:path";
 import * as fs from "fs";
 import { parse } from 'yaml';
+import { fileURLToPath } from "node:url";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 interface ProfileQueries{
     name: string;
     userRole: string;
     userAIchoice: [];
+    userPrimaryLanguage: [];
     userAltChoice: string;
+
   };
 
 
