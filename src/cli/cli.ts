@@ -1,4 +1,5 @@
-import { SystemAIService, UserProfile } from "../system/systemService.js";
+import { SystemAIService } from "../system/systemService.js";
+import { UserProfile } from "../system/profile.js";
 import { System } from "../config/config.js";
 import * as readline from "readline";
 import * as path from "path";
