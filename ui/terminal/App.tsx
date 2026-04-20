@@ -208,7 +208,7 @@ const Header: React.FC<{ width: number }> = ({ width }) => (
 const StatusBar: React.FC<{
     sessionID: number;
     profileName?: string | undefined;
-}> = ({ sessionID, profileName }) => (
+}> = ({ sessionID }) => (
     <Box marginTop={1}>
         <Text color="gray">session </Text>
         <Text color="magenta">#{sessionID}</Text>
@@ -216,12 +216,6 @@ const StatusBar: React.FC<{
         <Text color="green">{MODEL}</Text>
         <Text color="gray"> · host </Text>
         <Text color="yellow">{System.SystemName}</Text>
-        {profileName ? (
-            <>
-                <Text color="gray"> · </Text>
-                <Text color="cyan">{profileName}</Text>
-            </>
-        ) : null}
     </Box>
 );
 
