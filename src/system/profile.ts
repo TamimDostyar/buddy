@@ -12,6 +12,7 @@ interface ProfileQueries{
     userAIchoice: [];
     userPrimaryLanguage: [];
     userAltChoice: string;
+    userLocation: string;
 
   };
 

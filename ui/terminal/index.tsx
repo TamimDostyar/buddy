@@ -1,40 +1,51 @@
 #!/usr/bin/env tsx
-import React, { useState } from "react";
+import React from "react";
 import { render } from "ink";
-import * as fs from "fs";
-import * as path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 import { App } from "./App.js";
 import { ProfileSetup } from "../interface/ProfileSetup.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const PROFILE_PATH = path.resolve(__dirname, "../../profile/profile.json");
-
-const readProfile = (): Record<string, string> | null => {
-    if (!fs.existsSync(PROFILE_PATH)) return null;
-    const raw = fs.readFileSync(PROFILE_PATH, "utf-8");
-    if (!raw || raw.trim().length === 0) return null;
-    try {
-        return JSON.parse(raw);
-    } catch {
-        return null;
-    }
-};
+import { useProfileSetupFlow, useProfileState } from "../interface/profileFlow.js";
+import { useChatFlow } from "./chatFlow.js";
 
 const Root: React.FC = () => {
-    const [profile, setProfile] = useState<Record<string, string> | null>(
-        readProfile()
-    );
+    const { profile, setProfile } = useProfileState();
+    const profileFlow = useProfileSetupFlow((p) => setProfile(p));
 
     if (!profile) {
-        return <ProfileSetup onComplete={(p) => setProfile(p)} />;
+        return (
+            <ProfileSetup
+                fields={profileFlow.fields}
+                idx={profileFlow.idx}
+                selectIdx={profileFlow.selectIdx}
+                textValue={profileFlow.textValue}
+                loadError={profileFlow.loadError}
+                onTextChange={profileFlow.setTextValue}
+                onTextSubmit={profileFlow.commit}
+                onMoveSelect={profileFlow.moveSelect}
+                onCommitSelect={profileFlow.commitSelected}
+            />
+        );
     }
 
-    return <App profileName={profile["userProfile"]} />;
+    return <ChatRoot profileName={profile["userProfile"]} />;
+};
+
+const ChatRoot: React.FC<{ profileName?: string | undefined}> = ({ profileName }) => {
+    const chat = useChatFlow();
+
+    return (
+        <App
+            profileName={profileName}
+            turns={chat.turns}
+            busy={chat.busy}
+            error={chat.error}
+            sessionID={chat.sessionID}
+            modelName={chat.modelName}
+            hostName={chat.hostName}
+            onSend={chat.sendMessage}
+            onClear={chat.clear}
+        />
+    );
 };
 
 render(<Root />, { exitOnCtrlC: true });

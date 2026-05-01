@@ -36,4 +36,7 @@ useraltChoice:
   label: "Anything else you want our AI to remember about you?"
   help: "You can leave your response here:"
 
-
+localArea:
+  type: text
+  label: "What is your area?"
+  help: "This will help your local ai model to know exact time and location to provide you personalized response. Format must look (America/Chicago)"

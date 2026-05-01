@@ -1,83 +1,33 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Box, Text, useApp, useInput } from "ink";
+import React from "react";
+import { Box, Text, useInput } from "ink";
 import TextInput from "ink-text-input";
 import Gradient from "ink-gradient";
 import BigText from "ink-big-text";
-import * as fs from "fs";
-import * as path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-import { UserProfile } from "../../src/system/profile.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-type Field = {
-    key: string;
-    label: string;
-    help?: string;
-    type: "text" | "select";
-    options?: string[];
-};
+import type { Field } from "./profileFlow.js";
 
 type Props = {
-    onComplete: (profile: Record<string, string>) => void;
+    fields: Field[] | null;
+    idx: number;
+    selectIdx: number;
+    textValue: string;
+    loadError: string | null;
+    onTextChange: (value: string) => void;
+    onTextSubmit: (value: string) => void;
+    onMoveSelect: (delta: number) => void;
+    onCommitSelect: () => void;
 };
 
-const ORDER = [
-    "userProfile",
-    "userRole",
-    "userAIchoice",
-    "userPrimaryLanguage",
-    "useraltChoice",
-] as const;
-
-export const ProfileSetup: React.FC<Props> = ({ onComplete }) => {
-    const { exit } = useApp();
-    const [fields, setFields] = useState<Field[] | null>(null);
-    const [idx, setIdx] = useState(0);
-    const [answers, setAnswers] = useState<Record<string, string>>({});
-    const [textValue, setTextValue] = useState("");
-    const [selectIdx, setSelectIdx] = useState(0);
-    const [loadError, setLoadError] = useState<string | null>(null);
-
-    const profilePath = useMemo(
-        () => path.resolve(__dirname, "../../profile/profile.json"),
-        []
-    );
-
-    useEffect(() => {
-        (async () => {
-            const schema = await new UserProfile().createProfile();
-            if (typeof schema === "string") {
-                setLoadError(schema);
-                return;
-            }
-
-            const collected: Field[] = [];
-            const schemaRecord = schema as unknown as Record<string, unknown>;
-            for (const key of ORDER) {
-                const f = schemaRecord[key] as
-                    | {
-                          label: string;
-                          help?: string;
-                          type: "text" | "select";
-                          options?: string[];
-                      }
-                    | undefined;
-                if (!f) continue;
-                collected.push({
-                    key,
-                    label: f.label,
-                    help: f.help ?? "",
-                    type: f.type,
-                    options: f.options ?? [],
-                });
-            }
-            setFields(collected);
-        })();
-    }, []);
+export const ProfileSetup: React.FC<Props> = ({
+    fields,
+    idx,
+    selectIdx,
+    textValue,
+    loadError,
+    onTextChange,
+    onTextSubmit,
+    onMoveSelect,
+    onCommitSelect,
+}) => {
 
     useInput(
         (_ch, key) => {
@@ -86,37 +36,15 @@ export const ProfileSetup: React.FC<Props> = ({ onComplete }) => {
             if (!current || current.type !== "select") return;
 
             if (key.upArrow) {
-                setSelectIdx((i) =>
-                    i <= 0 ? (current.options?.length ?? 1) - 1 : i - 1
-                );
+                onMoveSelect(-1);
             } else if (key.downArrow) {
-                setSelectIdx((i) =>
-                    i >= (current.options?.length ?? 1) - 1 ? 0 : i + 1
-                );
+                onMoveSelect(1);
             } else if (key.return) {
-                commit(current.options?.[selectIdx] ?? "");
+                onCommitSelect();
             }
         },
         { isActive: !!fields }
     );
-
-    const commit = (value: string) => {
-        if (!fields) return;
-        const current = fields[idx];
-        if (!current) return;
-        const nextAnswers = { ...answers, [current.key]: value };
-        setAnswers(nextAnswers);
-        setTextValue("");
-        setSelectIdx(0);
-
-        if (idx + 1 >= fields.length) {
-            fs.mkdirSync(path.dirname(profilePath), { recursive: true });
-            fs.writeFileSync(profilePath, JSON.stringify(nextAnswers, null, 2));
-            onComplete(nextAnswers);
-        } else {
-            setIdx(idx + 1);
-        }
-    };
 
     if (loadError) {
         return (
@@ -172,8 +100,8 @@ export const ProfileSetup: React.FC<Props> = ({ onComplete }) => {
                             <Text color="cyan">{"› "}</Text>
                             <TextInput
                                 value={textValue}
-                                onChange={setTextValue}
-                                onSubmit={(v) => commit(v.trim())}
+                                onChange={onTextChange}
+                                onSubmit={(v) => onTextSubmit(v.trim())}
                                 placeholder="type your answer..."
                             />
                         </Box>

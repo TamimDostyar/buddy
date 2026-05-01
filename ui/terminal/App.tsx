@@ -1,19 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Box, Text, useApp, useInput, useStdout } from "ink";
 import TextInput from "ink-text-input";
 import Spinner from "ink-spinner";
 import Gradient from "ink-gradient";
 import BigText from "ink-big-text";
-import * as path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-import { SystemAIService, type Message } from "../../src/system/systemService.js";
-import { MemoryManagement } from "../../src/memory/mem.js";
-import { System, MODEL } from "../../src/config/config.js";
 import { marked } from "marked";
 import { markedTerminal } from "marked-terminal";
-
+import type { ChatTurn } from "./chatFlow.js";
 
 marked.use(markedTerminal() as never);
 
@@ -22,41 +15,33 @@ const renderMarkdown = (src: string): string => {
     return out.replace(/\n+$/, "");
 };
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const MEMORY_DIR = path.resolve(__dirname, "../../.memoryChatSession");
-
-type ChatTurn = {
-    role: "user" | "assistant" | "system";
-    content: string;
-};
-
 type Props = {
     profileName?: string | undefined;
+    turns: ChatTurn[];
+    busy: boolean;
+    error: string | null;
+    sessionID: number;
+    modelName: string;
+    hostName: string;
+    onSend: (value: string) => void | Promise<void>;
+    onClear: () => void;
 };
 
-const generateSessionNumber = (): number =>
-    Math.floor(Math.random() * (9000 + 1));
-
-export const App: React.FC<Props> = ({ profileName }) => {
+export const App: React.FC<Props> = ({
+    profileName,
+    turns,
+    busy,
+    error,
+    sessionID,
+    modelName,
+    hostName,
+    onSend,
+    onClear,
+}) => {
     const { exit } = useApp();
     const { stdout } = useStdout();
 
-    const memoryManagement = useMemo(() => new MemoryManagement(), []);
-    const systemService = useMemo(() => new SystemAIService(), []);
-
-    const sessionID = useMemo(() => generateSessionNumber(), []);
-    const sessionFile = useMemo(() => {
-        const file = path.join(MEMORY_DIR, `${sessionID}.json`);
-        memoryManagement.initMemory(file);
-        return file;
-    }, [memoryManagement, sessionID]);
-
     const [input, setInput] = useState<string>("");
-    const [turns, setTurns] = useState<ChatTurn[]>([]);
-    const [busy, setBusy] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
 
     const cols = stdout?.columns ?? 80;
     const bodyWidth = Math.max(40, Math.min(cols - 2, 120));
@@ -77,48 +62,13 @@ export const App: React.FC<Props> = ({ profileName }) => {
         }
 
         if (trimmed === "/clear") {
-            setTurns([]);
+            onClear();
             setInput("");
             return;
         }
 
         setInput("");
-        setError(null);
-        setBusy(true);
-
-        const nextTurns: ChatTurn[] = [
-            ...turns,
-            { role: "user", content: trimmed },
-        ];
-        setTurns(nextTurns);
-
-        try {
-            const history = memoryManagement.readFiles(sessionFile) || [];
-            const priorMessages: Message[] = history.flatMap(
-                (entry: { user: string; output: string }) => [
-                    { role: "user" as const, content: entry.user },
-                    { role: "assistant" as const, content: entry.output },
-                ]
-            );
-
-            const reply = await systemService.ollamaIntelligence(
-                trimmed,
-                priorMessages
-            );
-
-            setTurns([
-                ...nextTurns,
-                { role: "assistant", content: reply },
-            ]);
-
-            memoryManagement.writeFile(sessionFile, trimmed, reply);
-        } catch (err) {
-            const message =
-                err instanceof Error ? err.message : "Unknown error";
-            setError(message);
-        } finally {
-            setBusy(false);
-        }
+        await onSend(trimmed);
     };
 
     return (
@@ -127,6 +77,8 @@ export const App: React.FC<Props> = ({ profileName }) => {
             <StatusBar
                 sessionID={sessionID}
                 profileName={profileName}
+                modelName={modelName}
+                hostName={hostName}
             />
 
             <Box
@@ -208,14 +160,16 @@ const Header: React.FC<{ width: number }> = ({ width }) => (
 const StatusBar: React.FC<{
     sessionID: number;
     profileName?: string | undefined;
-}> = ({ sessionID }) => (
+    modelName: string;
+    hostName: string;
+}> = ({ sessionID, modelName, hostName }) => (
     <Box marginTop={1}>
         <Text color="gray">session </Text>
         <Text color="magenta">#{sessionID}</Text>
         <Text color="gray"> · model </Text>
-        <Text color="green">{MODEL}</Text>
+        <Text color="green">{modelName}</Text>
         <Text color="gray"> · host </Text>
-        <Text color="yellow">{System.SystemName}</Text>
+        <Text color="yellow">{hostName}</Text>
     </Box>
 );
 
