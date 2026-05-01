@@ -20,13 +20,18 @@
   "license": "ISC",
   "packageManager": "pnpm@10.33.0",
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/marked-terminal": "^6.1.1",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   },
   "dependencies": {
+    "add": "^2.0.6",
+    "express": "^5.2.1",
     "get-port-please": "^3.2.0",
     "ink": "^7.0.1",
     "ink-big-text": "^2.0.0",
@@ -37,6 +42,7 @@
     "marked": "^12.0.2",
     "marked-terminal": "^7",
     "ollama": "^0.6.3",
+    "pnpm": "^10.33.2",
     "react": "^19.2.5",
     "yaml": "^2.8.3"
   }
