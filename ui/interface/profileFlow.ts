@@ -91,6 +91,7 @@ export const useProfileSetupFlow = (
     const [textValue, setTextValue] = useState("");
     const [selectIdx, setSelectIdx] = useState(0);
     const [loadError, setLoadError] = useState<string | null>(null);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -100,8 +101,25 @@ export const useProfileSetupFlow = (
                 return;
             }
             setFields(loaded);
+            const currentProfile = readProfile();
+            if (currentProfile) {
+                setAnswers(currentProfile);
+                setIsUpdating(true);
+            }
         })();
     }, []);
+
+    const reset = () => {
+        setIdx(0);
+        const currentProfile = readProfile();
+        if (currentProfile) {
+            setAnswers(currentProfile);
+            setIsUpdating(true);
+        } else {
+            setAnswers({});
+            setIsUpdating(false);
+        }
+    };
 
     const commit = useMemo(() => {
         return (value: string) => {
@@ -146,9 +164,12 @@ export const useProfileSetupFlow = (
         selectIdx,
         textValue,
         loadError,
+        isUpdating,
+        answers,
         setTextValue,
         commit,
         moveSelect,
         commitSelected,
+        reset,
     };
 };

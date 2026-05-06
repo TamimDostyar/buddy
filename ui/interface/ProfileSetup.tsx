@@ -11,6 +11,8 @@ type Props = {
     selectIdx: number;
     textValue: string;
     loadError: string | null;
+    isUpdating?: boolean;
+    answers?: Record<string, string>;
     onTextChange: (value: string) => void;
     onTextSubmit: (value: string) => void;
     onMoveSelect: (delta: number) => void;
@@ -23,6 +25,8 @@ export const ProfileSetup: React.FC<Props> = ({
     selectIdx,
     textValue,
     loadError,
+    isUpdating,
+    answers,
     onTextChange,
     onTextSubmit,
     onMoveSelect,
@@ -66,12 +70,16 @@ export const ProfileSetup: React.FC<Props> = ({
     const current = fields[idx];
     if (!current) return null;
 
+    const previousValue = answers?.[current.key];
+
     return (
         <Box flexDirection="column">
             <Gradient name="pastel">
                 <BigText text="buddy" font="tiny" />
             </Gradient>
-            <Text color="gray">let's get you set up. ({idx + 1}/{fields.length})</Text>
+            <Text color="gray">
+                {isUpdating ? "updating profile..." : "let's get you set up."} ({idx + 1}/{fields.length})
+            </Text>
 
             <Box
                 borderStyle="round"
@@ -89,7 +97,14 @@ export const ProfileSetup: React.FC<Props> = ({
                     </Text>
                 ) : null}
 
-                <Box marginTop={1} flexDirection="column">
+                {isUpdating && previousValue && (
+                    <Box marginY={1}>
+                        <Text color="gray">Current value: </Text>
+                        <Text color="yellow">{previousValue}</Text>
+                    </Box>
+                )}
+
+                <Box marginTop={isUpdating && previousValue ? 0 : 1} flexDirection="column">
                     {current.type === "select" ? (
                         <SelectList
                             options={current.options ?? []}
@@ -101,8 +116,8 @@ export const ProfileSetup: React.FC<Props> = ({
                             <TextInput
                                 value={textValue}
                                 onChange={onTextChange}
-                                onSubmit={(v) => onTextSubmit(v.trim())}
-                                placeholder="type your answer..."
+                                onSubmit={(v) => onTextSubmit(v.trim() || (isUpdating && previousValue ? previousValue : ""))}
+                                placeholder={isUpdating && previousValue ? "(press enter to keep current value)" : "type your answer..."}
                             />
                         </Box>
                     )}

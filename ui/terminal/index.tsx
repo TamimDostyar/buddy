@@ -19,6 +19,8 @@ const Root: React.FC = () => {
                 selectIdx={profileFlow.selectIdx}
                 textValue={profileFlow.textValue}
                 loadError={profileFlow.loadError}
+                isUpdating={profileFlow.isUpdating}
+                answers={profileFlow.answers}
                 onTextChange={profileFlow.setTextValue}
                 onTextSubmit={profileFlow.commit}
                 onMoveSelect={profileFlow.moveSelect}
@@ -27,10 +29,18 @@ const Root: React.FC = () => {
         );
     }
 
-    return <ChatRoot profileName={profile["userProfile"]} />;
+    return (
+        <ChatRoot 
+            profileName={profile["userProfile"]} 
+            onRequireUpdate={() => {
+                profileFlow.reset();
+                setProfile(null);
+            }} 
+        />
+    );
 };
 
-const ChatRoot: React.FC<{ profileName?: string | undefined}> = ({ profileName }) => {
+const ChatRoot: React.FC<{ profileName?: string | undefined, onRequireUpdate?: () => void }> = ({ profileName, onRequireUpdate }) => {
     const chat = useChatFlow();
 
     return (
@@ -44,6 +54,7 @@ const ChatRoot: React.FC<{ profileName?: string | undefined}> = ({ profileName }
             hostName={chat.hostName}
             onSend={chat.sendMessage}
             onClear={chat.clear}
+            onUpdate={onRequireUpdate}
         />
     );
 };

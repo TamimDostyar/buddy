@@ -25,6 +25,7 @@ type Props = {
     hostName: string;
     onSend: (value: string) => void | Promise<void>;
     onClear: () => void;
+    onUpdate?: () => void;
 };
 
 export const App: React.FC<Props> = ({
@@ -37,6 +38,7 @@ export const App: React.FC<Props> = ({
     hostName,
     onSend,
     onClear,
+    onUpdate,
 }) => {
     const { exit } = useApp();
     const { stdout } = useStdout();
@@ -56,15 +58,24 @@ export const App: React.FC<Props> = ({
         const trimmed = value.trim();
         if (!trimmed) return;
 
-        if (trimmed === ":q" || trimmed === "/quit" || trimmed === "/exit") {
-            exit();
-            return;
-        }
-
-        if (trimmed === "/clear") {
-            onClear();
-            setInput("");
-            return;
+        if (trimmed.startsWith("/") || trimmed === ":q") {
+            const command = trimmed === ":q" ? "/quit" : trimmed;
+            switch (command) {
+                case "/quit":
+                case "/exit":
+                    exit();
+                    return;
+                case "/clear":
+                    onClear();
+                    setInput("");
+                    return;
+                case "/update":
+                    if (onUpdate) onUpdate();
+                    return;
+                default:
+                    // Unknown command, we could ignore or send as chat. Let's send as chat for now.
+                    break;
+            }
         }
 
         setInput("");
@@ -110,6 +121,15 @@ export const App: React.FC<Props> = ({
             {error && (
                 <Box marginTop={1}>
                     <Text color="red">! {error}</Text>
+                </Box>
+            )}
+
+            {input.startsWith("/") && (
+                <Box marginTop={1} paddingX={1} flexDirection="column" borderStyle="round" borderColor="yellow">
+                    <Text color="yellow">Available commands:</Text>
+                    <Text color="gray">/update - Update your profile settings</Text>
+                    <Text color="gray">/clear  - Clear conversation context</Text>
+                    <Text color="gray">/quit   - Exit buddy</Text>
                 </Box>
             )}
 
