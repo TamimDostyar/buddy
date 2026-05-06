@@ -26,10 +26,6 @@ This screenshot shows Buddy running in the terminal:
 
 ![Buddy terminal example](asset/buddyInterface.png)
 
-Here is the working session feature for the system.
-![SESSION](asset/buddySession.png)
-
-
 Here is how you can get all the command lines with `/`.
 ![UI](asset/cmdInterface.png)
 
