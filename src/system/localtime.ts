@@ -53,8 +53,8 @@ class GetLocal extends Timer{
 
 }
 
-const localTime = new GetLocal();
-// console.log(localTime.currentTime("America/Chicago"));
-// localTime.runShellCommand('date').then(console.log).catch(console.error);
+// const localTime = new GetLocal();
+// // console.log(localTime.currentTime("America/Chicago"));
+// // localTime.runShellCommand('date').then(console.log).catch(console.error);
 
 export {GetLocal};

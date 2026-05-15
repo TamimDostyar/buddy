@@ -14,8 +14,6 @@ export type Message = {
   content: string;
 };
 
-// const ollama = new Ollama();
-// const getLocalTime = new GetLocal();
 class SystemAIService {
   private ollama = new Ollama();
   private getLocalTime = new GetLocal();
