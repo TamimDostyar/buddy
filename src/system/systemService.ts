@@ -14,6 +14,8 @@ export type Message = {
   content: string;
 };
 
+// const ollama = new Ollama();
+// const getLocalTime = new GetLocal();
 class SystemAIService {
   private ollama = new Ollama();
   private getLocalTime = new GetLocal();
@@ -34,23 +36,12 @@ class SystemAIService {
       "../../profile/profile.json"
     )
     const readSystemProfile = fs.readFileSync(systemProfile, 'utf-8');
-    let localTimeMessage: Message | null = null;
-    try {
-      const profile = JSON.parse(readSystemProfile) as { localArea?: string };
-      if (profile.localArea) {
-        const [time, date] = this.getLocalTime.currentTime(profile.localArea);
-        localTimeMessage = {
-          role: "system",
-          content: `User local time zone: ${profile.localArea}. Local time: ${time}. Local date: ${date}.`
-        };
-      }
-    } catch {
-      localTimeMessage = null;
-    }
+
+    const currentTime = await this.getLocalTime.runShellCommand("date");
+
     const messages: Message[] = [
       { role: "system", content: systemPrompt },
-      ...(localTimeMessage ? [localTimeMessage] : []),
-      ...priorMessages,
+      { role: "system", content: `Current date: ${currentTime}` },
       { role: "system", content: readSystemProfile },
       ...priorMessages,
       { role: "user", content: userPrompt }

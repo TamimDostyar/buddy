@@ -9,15 +9,14 @@ Buddy is written in TypeScript because it gives static types and fast editor fee
 
 ## Run (placeholder)
 
-- Entrypoint and package scripts are not wired yet. When they are, this section will list the exact command (for example, how to invoke the CLI in [`src/cli/cli.ts`](src/cli/cli.ts)).
+- `pnpm start` — launches the Ink terminal UI at [`ui/terminal/index.tsx`](ui/terminal/index.tsx).
+- `pnpm dev` — same, with file-watch reload.
 
 ## Repo layout (high level)
 
-- `pnpm tsx src/cli/cli.ts `
-
-- `src/` — core code: CLI, config, memory, system service.
+- `src/` — backend/infrastructure only: config, memory, system service, profile schema, infra adapters. No UI code.
 - `skills/` — one folder per skill; each skill has a short `.md` describing what it will do.
-- `ui/` — plans for terminal vs any future interface.
+- `ui/` — all user-facing code: Ink/React terminal UI and the hooks that adapt `src/` logic for it. Any future interface (web, GUI) goes here too.
 - `security/` — notes on system security and threading/concurrency expectations.
 
 ## Example
@@ -49,12 +48,12 @@ How input travels through buddyCLI today, and how it will travel through BuddySh
   TODAY                                   FUTURE (BuddyShell inside buddyOS)
   ─────────────────────────────────       ────────────────────────────────────────
 
-  $ pnpm tsx src/cli/cli.ts               buddy> _
+  $ pnpm start                            buddy> _
   buddy> what time is it                  buddy> open the file I was editing
                                                  about the networking bug
       │                                       │
       ▼                                       │  sys_ask()  (natural-language syscall)
-  cli.ts                                      ▼
+  ui/terminal (Ink)                           ▼
       │                               buddyGPT  (kai/ kernel subsystem)
       │                                       │
       ▼                                       │  reads live kernel state:

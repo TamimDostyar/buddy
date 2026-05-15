@@ -11,11 +11,10 @@ const MEMORY_DIR = path.resolve(__dirname, "../../.memoryChatSession");
 
 export class MemoryManagement {
     initMemory(filePath: string): string {
-        // if folder is not there create the folder
+
         if (!fs.existsSync(MEMORY_DIR)) {
             fs.mkdirSync(MEMORY_DIR, { recursive: true });
         } 
-        // if file is not there then create the file
         if (!fs.existsSync(filePath)){
             fs.writeFileSync(filePath, "", "utf-8");
             return filePath;
