@@ -1,3 +1,7 @@
+import os
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class QwenChatbot:
@@ -31,10 +35,8 @@ if __name__ == "__main__":
 
     while True:
         user_input = input("-> ")
-        if user_input != ":q":
-            respond_msg = chatbot.generate_response(user_input)
-            print(respond_msg)
-            continue
-            
-        else:
+        if user_input == ":q":
             break
+
+        respond_msg = chatbot.generate_response(user_input)
+        print(respond_msg)
